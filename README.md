@@ -1,5 +1,5 @@
 # Automation Testing
-
+test
 The source repository hosting this test is read-only.  
 Before you begin, you will need to import it into your own hosted repository.  
 
