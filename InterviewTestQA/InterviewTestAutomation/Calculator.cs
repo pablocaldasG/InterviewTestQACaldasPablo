@@ -29,11 +29,11 @@
             return a * a;
         }
 
-        public int SquareRoot(int a)
+        public double SquareRoot(int a)
         {
-            if (a == 0)
+            if (a <= 0) 
                 throw new ArgumentException("Cannot square root zero.");
-            return a / a;
+            return Math.Sqrt(a);
         }
     }
 }
