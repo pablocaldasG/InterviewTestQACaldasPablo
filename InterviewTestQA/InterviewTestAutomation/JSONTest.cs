@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Xunit;
 using InterviewTestQA;
-
+namespace InterviewTestQA { 
 public class JSONTest
 {
     [Fact]
@@ -48,4 +48,5 @@ public class JSONTest
 
         Assert.Equal(77911.3744561m, totalCost2016);
     }
+}
 }
