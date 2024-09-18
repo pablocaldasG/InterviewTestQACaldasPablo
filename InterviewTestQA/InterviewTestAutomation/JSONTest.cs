@@ -8,9 +8,8 @@ namespace InterviewTestQA
 {
     public class JSONTest
     {
-        // Test to check deserialization of Cost Analysis data
-        [Fact]
-        public void TestCostAnalysisDeserialization()
+        // Helper method to handle reading and deserialization
+        private (string RawJson, List<CostAnalysisItem> DeserializedItems) LoadCostAnalysisJson()
         {
             // Get the directory two levels above the current directory (as the file is not in C:\Users\90cal\source\repos\pablocaldasG\InterviewTestQACaldasPablo\InterviewTestQA\bin\Debug\net6.0\InterviewTestAutomation\Data\Cost Analysis.json)
             string projectDirectory = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
@@ -21,12 +20,22 @@ namespace InterviewTestQA
             // Ensure that the file exists at the specified path
             Assert.True(File.Exists(jsonFilePath), $"File not found at {jsonFilePath}");
 
-
-            // Read the JSON file into a string
-            string jsonData = File.ReadAllText(jsonFilePath);
+            // Read the raw JSON content from the file
+            string rawJson = File.ReadAllText(jsonFilePath);
 
             // Deserialize the JSON data into a list of CostAnalysisItem objects
-            List<CostAnalysisItem> costAnalysisList = JsonConvert.DeserializeObject<List<CostAnalysisItem>>(jsonData);
+            List<CostAnalysisItem> costAnalysisList = JsonConvert.DeserializeObject<List<CostAnalysisItem>>(rawJson);
+
+            // Return both the raw JSON and the deserialized objects
+            return (rawJson, costAnalysisList);
+        }
+
+        // Test to check deserialization of Cost Analysis data
+        [Fact]
+        public void TestCostAnalysisDeserialization()
+        {
+            // Use the helper to load the raw JSON and deserialized objects
+            var (rawJson, costAnalysisList) = LoadCostAnalysisJson();
 
             // Assert that the correct number of items was deserialized
             Assert.Equal(53, costAnalysisList.Count); // Expecting 53 items as per the provided JSON
@@ -35,25 +44,20 @@ namespace InterviewTestQA
             Assert.Equal("2015", costAnalysisList[0].YearId);
             Assert.Equal(0, costAnalysisList[0].CountryId);
             Assert.Equal(150, costAnalysisList[6].GeoRegionId); // Example check on GeoRegionId
+
+            // Assert that raw JSON is non-empty before deserialization
+            Assert.False(string.IsNullOrEmpty(rawJson), "Raw JSON should not be empty");
         }
 
         // Test to perform additional checks on the Cost Analysis data
         [Fact]
         public void TestCostAnalysis()
         {
-            // Get the directory two levels above the current directory (as the file is not in C:\Users\90cal\source\repos\pablocaldasG\InterviewTestQACaldasPablo\InterviewTestQA\bin\Debug\net6.0\InterviewTestAutomation\Data\Cost Analysis.json)
-            string projectDirectory = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+            // Use the helper to load the raw JSON and deserialized objects
+            var (rawJson, costAnalysisItems) = LoadCostAnalysisJson();
 
-            // Combine the project directory with the relative path to the JSON file
-            string jsonFilePath = Path.Combine(projectDirectory, "InterviewTestAutomation", "Data", "Cost Analysis.json");
-
-            // Ensure that the file exists at the specified path
-            Assert.True(File.Exists(jsonFilePath), $"File not found at {jsonFilePath}");
-
-
-            // Load and deserialize the JSON file into a list of CostAnalysisItem objects
-            string jsonData = File.ReadAllText(jsonFilePath);
-            List<CostAnalysisItem> costAnalysisItems = JsonConvert.DeserializeObject<List<CostAnalysisItem>>(jsonData);
+            // Assert raw JSON content before deserialization
+            Assert.False(string.IsNullOrEmpty(rawJson), "Raw JSON should not be empty");
 
             // 1. Get the top item ordered by Cost in descending order and assert the CountryId
             var topCostItem = costAnalysisItems.OrderByDescending(item => item.Cost).FirstOrDefault();
