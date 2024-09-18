@@ -28,7 +28,7 @@
         {
             return a * a;
         }
-
+        // Updated method as the exception only evaluates if the number was 0 and missing negative numbers and also the operation as it was a / a wich always will return 1 instead of the squareroot.
         public double SquareRoot(int a)
         {
             if (a <= 0) 
